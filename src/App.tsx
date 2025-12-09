@@ -1,5 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Trash2, Droplets, Wrench, Waves, AlertTriangle, TrendingUp, DollarSign, Save, RotateCcw } from 'lucide-react';
+
+interface Expense {
+  id: number;
+  name: string;
+  amount: number;
+  isPatched: boolean;
+}
 
 const App = () => {
   // State dasar dengan Lazy Initialization dari LocalStorage
@@ -12,10 +19,10 @@ const App = () => {
     return 5000000;
   });
 
-  const [expenses, setExpenses] = useState(() => {
+  const [expenses, setExpenses] = useState<Expense[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('tangki_gaji_expenses');
-      return saved ? JSON.parse(saved) : [
+      return saved ? (JSON.parse(saved) as Expense[]) : [
         { id: 1, name: 'Cicilan Motor', amount: 800000, isPatched: false },
         { id: 2, name: 'Kopi Kekinian', amount: 400000, isPatched: false },
         { id: 3, name: 'Netflix & Chill', amount: 180000, isPatched: true },
@@ -46,8 +53,8 @@ const App = () => {
 
   // Perhitungan Matematika Kehidupan
   const totalLeaks = expenses
-    .filter(e => !e.isPatched)
-    .reduce((acc, curr) => acc + curr.amount, 0);
+    .filter((e: Expense) => !e.isPatched)
+.reduce((acc: number, curr: Expense) => acc + curr.amount, 0);
   
   const currentBalance = income - totalLeaks;
   // Mencegah error NaN atau Infinity kalau income 0
@@ -68,7 +75,7 @@ const App = () => {
     return 'from-cyan-500 to-blue-600';
   };
 
-  const handleAddExpense = (e) => {
+  const handleAddExpense = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newExpenseName || !newExpenseAmount) return;
     const amount = parseFloat(newExpenseAmount);
@@ -82,17 +89,17 @@ const App = () => {
     setNewExpenseAmount('');
   };
 
-  const togglePatch = (id) => {
-    setExpenses(expenses.map(exp => 
+  const togglePatch = (id: number) => {
+    setExpenses(expenses.map((exp: Expense) => 
       exp.id === id ? { ...exp, isPatched: !exp.isPatched } : exp
     ));
   };
 
-  const deleteExpense = (id) => {
-    setExpenses(expenses.filter(exp => exp.id !== id));
+  const deleteExpense = (id: number) => {
+    setExpenses(expenses.filter((exp: Expense) => exp.id !== id));
   };
 
-  const formatRupiah = (num) => {
+  const formatRupiah = (num: number) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
   };
 
@@ -233,7 +240,7 @@ const App = () => {
               </div>
             )}
 
-            {expenses.map((expense) => (
+            {expenses.map((expense: Expense) => (
               <div 
                 key={expense.id}
                 className={`group relative overflow-hidden rounded-xl border transition-all duration-300 ${
@@ -298,7 +305,9 @@ const App = () => {
                 <div className="p-4 bg-neutral-900 rounded-lg">
                     <div className="text-gray-500 text-xs mb-1 flex justify-center items-center gap-1"><TrendingUp size={12}/> Potensi Hemat</div>
                     <div className="text-green-500 font-bold">
-                        {formatRupiah(expenses.filter(e => e.isPatched).reduce((a,b) => a + b.amount, 0))}
+                        {formatRupiah(expenses
+  .filter((e: Expense) => e.isPatched)
+  .reduce((a: number, b: Expense) => a + b.amount, 0))}
                     </div>
                 </div>
                 <div className="p-4 bg-neutral-900 rounded-lg">
