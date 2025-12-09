@@ -8,11 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: # <--- INI TAMBALANNYA!
-contents: write # Izin untuk check out dan push commit
-pages: write    # Izin untuk deploy ke GitHub Pages
-id-token: write # Diperlukan untuk deployment modern
-
+    permission:
+    content: write
+    pages: write
+    id-token: write
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
