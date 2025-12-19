@@ -71,8 +71,3 @@ export default defineConfig([
   },
 ])
 ```
-# tangki-gaji
-# tangki-gaji
-# tangki-gaji
-# tangki-gaji
-# tangki-gaji
